@@ -1,24 +1,49 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.scss";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { PrivateComponent } from "./components/PrivateComponent";
+import { NavLink, Switch, Route } from "react-router-dom";
+import { MdSearch } from "react-icons/md";
+import logo from "./assets/logo.png";
 
 function App() {
+  const [isLogged, setIsLogged] = useState(false);
+  const clickHandler = () => setIsLogged((flag) => !flag);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Switch>
+        <nav>
+          <div>
+            <img src={logo} alt="" className="logo" />
+            <NavLink to="">Wydarzenia</NavLink>
+            <NavLink className="contact" to="">
+              Kontakt
+            </NavLink>
+            <NavLink to="">Wesprzyj Nas</NavLink>
+          </div>
+          <div>
+            <NavLink className="navbarIcon" to="">
+              <MdSearch size="28px" />
+            </NavLink>
+            <Route exact path="/">
+              <NavLink className="loginButton" to="/logged">
+                Zaloguj się
+              </NavLink>
+            </Route>
+            <ProtectedRoute path="/logged" isLogged={isLogged}>
+              <PrivateComponent />
+            </ProtectedRoute>
+          </div>
+        </nav>
+      </Switch>
+      <div className="toggleCredentials">
+        <span>Toggle credentials</span>
+        <input
+          type="checkbox"
+          className="credentialsButton"
+          onClick={clickHandler}
+        />
+      </div>
     </div>
   );
 }
